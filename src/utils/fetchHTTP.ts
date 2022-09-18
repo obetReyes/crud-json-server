@@ -1,20 +1,24 @@
+ const fetchHTTP = () => {
+  const customFetch = (endpoint:string, options:RequestInit) => {
+    const defaultHeader = {
+      accept: "application/json",
+    };
 
-const fetchHTTP = () => {
-    const customFetch = (endpoint:string, options:RequestInit) => {
-        const defaultHeader:HeadersInit  = {
-            accept:"application/json"
-        }
-        const abortController =  new AbortController();
-        options.signal = abortController.signal;
-        options.method = options.method || "GET"
-       options.headers = options.headers ? { ...defaultHeader, ...options.headers } : defaultHeader;
-        options.body = JSON.stringify(options.body) || null
-        if(!options.body) delete options.body
+    const controller = new AbortController();
+    options.signal = controller.signal;
 
+    options.method = options.method || "GET";
+    options.headers = options.headers
+      ? { ...defaultHeader, ...options.headers }
+      : defaultHeader;
 
-        setTimeout(() => abortController.abort(), 6000);
-    
-        return fetch(endpoint, options)
+    options.body = JSON.stringify(options.body) || null;
+    if (!options.body) delete options.body;
+
+    //console.log(options);
+    setTimeout(() => controller.abort(), 2000);
+
+    return fetch(endpoint, options)
       .then((res) =>
         res.ok
           ? res.json()
@@ -25,32 +29,31 @@ const fetchHTTP = () => {
             })
       )
       .catch((err) => err);
-    }
+  };
 
-     const get = (endpoint:string, options:any = {}) => customFetch(endpoint, options);
+  const get = (url:string, options:any = {}) => customFetch(url, options);
 
-  const post = (endpoint:string, options:any = {}) => {
+  const post = (url:string, options:any = {}) => {
     options.method = "POST";
-    return customFetch(endpoint, options);
+    return customFetch(url, options);
   };
 
-  const put = (endpoint:string, options:any = {}) => {
+  const put = (url:string, options:any = {}) => {
     options.method = "PUT";
-    return customFetch(endpoint, options);
+    return customFetch(url, options);
   };
 
-  const del = (endpoint:string, options:any = {}) => {
+  const del = (url:string, options:any = {}) => {
     options.method = "DELETE";
-    return customFetch(endpoint, options);
+    return customFetch(url, options);
   };
 
+  return {
+    get,
+    post,
+    put,
+    del,
+  };
+};
 
-    return{
-        get,
-        post,
-        put,
-        del
-    }
-}
-
-export default fetchHTTP;
+export default fetchHTTP

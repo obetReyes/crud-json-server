@@ -1,13 +1,11 @@
 import React from 'react'
+import './loader.css'
 
-interface loaderProps {
 
-}
-
-export const loader: React.FC<loaderProps> = ({}) => {
+export const Loader: React.FC = () => {
         return (
-            <div>
-                loader
-            </div>
+            <article>
+                <div className="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </article>
         );
 }
